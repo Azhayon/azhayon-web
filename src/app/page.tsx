@@ -1,3 +1,5 @@
+import { AuthNotice } from "@/components/header/AuthNotice";
+import { SiteHeader } from "@/components/header/SiteHeader";
 import { apiGet } from "@/lib/api";
 import type { HealthResponse } from "@/lib/types";
 
@@ -12,13 +14,17 @@ export default async function Home() {
   }
 
   return (
-    <main style={{ padding: "2rem", fontFamily: "system-ui" }}>
-      <h1>Azhayon Media: connection test</h1>
-      {health ? (
-        <pre>{JSON.stringify(health, null, 2)}</pre>
-      ) : (
-        <p style={{ color: "crimson" }}>API unreachable: {error}</p>
-      )}
-    </main>
+    <>
+      <SiteHeader />
+      <AuthNotice />
+      <main style={{ padding: "2rem", fontFamily: "system-ui" }}>
+        <h1>Azhayon Media: connection test</h1>
+        {health ? (
+          <pre>{JSON.stringify(health, null, 2)}</pre>
+        ) : (
+          <p style={{ color: "crimson" }}>API unreachable: {error}</p>
+        )}
+      </main>
+    </>
   );
 }

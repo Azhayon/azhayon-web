@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { apiPost } from "@/lib/api";
 import { clearSessionCookie, getSessionToken } from "@/lib/auth/cookies";
 
@@ -16,5 +15,4 @@ export async function logout() {
   }
 
   await clearSessionCookie();
-  redirect("/");
 }
