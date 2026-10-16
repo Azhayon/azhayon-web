@@ -31,3 +31,35 @@ export async function apiGet<T>(
 
   return res.json() as Promise<T>;
 }
+
+export async function apiPost<T>(
+  path: string,
+  body: unknown,
+  init: RequestInit = {}
+): Promise<T> {
+  if (!API_URL) {
+    throw new Error("API_URL is not set");
+  }
+
+  const res = await fetch(`${API_URL}${path}`, {
+    ...init,
+    method: "POST",
+    cache: "no-store",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...init.headers,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    throw new ApiError(res.status, `API request failed: ${res.status}`);
+  }
+
+  if (res.status === 204) {
+    return undefined as T;
+  }
+
+  return res.json() as Promise<T>;
+}
