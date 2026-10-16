@@ -11,6 +11,7 @@ const KNOWN_ERRORS = new Set([
   "oauth_failed",
   "account_disabled",
   "banned",
+  "rate_limited",
 ]);
 
 export async function GET(request: Request) {

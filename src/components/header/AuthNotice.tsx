@@ -12,6 +12,7 @@ const MESSAGES: Record<string, string> = {
   invalid_request: "The sign-in request was invalid. Please try again.",
   exchange_failed: "We couldn't complete sign-in. Please try again.",
   unknown: "Something went wrong while signing in. Please try again.",
+  rate_limited: "Too many sign-in attempts. Please wait a minute and try again.",
 };
 
 export function AuthNotice() {
