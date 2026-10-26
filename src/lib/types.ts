@@ -1,11 +1,3 @@
-export type HealthResponse = {
-  status: string;
-  app: string;
-  php: string;
-  laravel: string;
-  database: string;
-};
-
 export type SessionUser = {
   id: number;
   name: string;

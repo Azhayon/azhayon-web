@@ -1,7 +1,7 @@
 import { AuthNotice } from "@/components/header/AuthNotice";
 import { SiteHeader } from "@/components/header/SiteHeader";
 import { apiGet } from "@/lib/api";
-import type { HealthResponse } from "@/lib/types";
+import type { HealthResponse } from "@/lib/api-types";
 
 export default async function Home() {
   let health: HealthResponse | null = null;
