@@ -19,10 +19,7 @@ export const getSession = cache(async (): Promise<SessionUser | null> => {
   }
 
   try {
-    const res = await apiGet<{ data: SessionUser }>("/me", {
-      cache: "no-store",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await apiGet<{ data: SessionUser }>("/me", { token });
 
     return res.data;
   } catch (e) {

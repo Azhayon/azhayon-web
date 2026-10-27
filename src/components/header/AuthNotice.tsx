@@ -37,14 +37,14 @@ export function AuthNotice() {
   return (
     <div
       role="alert"
-      className="fixed left-1/2 top-16 z-50 flex w-[min(92vw,28rem)] -translate-x-1/2 items-start gap-3 rounded-xl bg-[#1E1E1E] p-4 text-sm text-white shadow-lg ring-1 ring-[#FF3366]"
+      className="fixed left-1/2 top-16 z-50 flex w-[min(92vw,28rem)] -translate-x-1/2 items-start gap-3 rounded-xl bg-surface p-4 text-sm text-fg shadow-lg ring-1 ring-accent"
     >
       <p className="flex-1">{message}</p>
       <button
         type="button"
         onClick={() => setMessage(null)}
         aria-label="Dismiss"
-        className="text-[#E0E0E0] hover:text-white"
+        className="text-muted hover:text-fg"
       >
         ✕
       </button>

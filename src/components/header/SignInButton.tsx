@@ -3,7 +3,7 @@
 import { useRef } from "react";
 
 const linkClass =
-  "block rounded-lg bg-white/5 px-4 py-3 text-center text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-white/10 hover:ring-[#00E5FF]";
+  "block rounded-lg bg-raised px-4 py-3 text-center text-sm font-semibold text-fg ring-1 ring-line transition hover:bg-raised-hover hover:ring-cyan";
 
 export function SignInButton() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -13,7 +13,7 @@ export function SignInButton() {
       <button
         type="button"
         onClick={() => dialogRef.current?.showModal()}
-        className="h-9 rounded-full bg-[#FF3366] px-4 text-sm font-semibold text-white transition hover:bg-[#00E5FF] hover:text-black"
+        className="h-9 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent transition hover:bg-cyan hover:text-on-accent"
       >
         Sign in
       </button>
@@ -25,13 +25,13 @@ export function SignInButton() {
         onClick={(e) => {
           if (e.target === e.currentTarget) dialogRef.current?.close();
         }}
-        className="m-auto w-[min(92vw,24rem)] rounded-2xl bg-[#1E1E1E] p-0 text-white ring-1 ring-white/10 backdrop:bg-black/70"
+        className="m-auto w-[min(92vw,24rem)] rounded-2xl bg-surface p-0 text-fg ring-1 ring-line backdrop:bg-black/70"
       >
         <div className="p-6">
           <h2 id="signin-title" className="text-xl font-extrabold">
             Sign in to Azhayon Media
           </h2>
-          <p className="mt-2 text-sm text-[#E0E0E0]">
+          <p className="mt-2 text-sm text-muted">
             Comment and rate posts. We only receive your name, avatar and verified email.
           </p>
 
@@ -51,7 +51,7 @@ export function SignInButton() {
           <button
             type="button"
             onClick={() => dialogRef.current?.close()}
-            className="mt-4 w-full text-center text-sm text-[#E0E0E0] underline-offset-4 hover:underline"
+            className="mt-4 w-full text-center text-sm text-muted underline-offset-4 hover:underline"
           >
             Cancel
           </button>

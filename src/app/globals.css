@@ -1,26 +1,81 @@
 @import "tailwindcss";
 
+/* Dark is the default. The inline script in <head> switches to light before the first paint. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --canvas: #121212;
+  --surface: #1e1e1e;
+  --raised: #262626;
+  --raised-hover: #303030;
+  --line: #333338;
+  --fg: #e0e0e0;
+  --muted: #a0a0ab;
+  --accent: #ff3366;
+  --cyan: #00e5ff;
+  --on-accent: #121212;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #fafafb;
+  --surface: #ffffff;
+  --raised: #ededf1;
+  --raised-hover: #e3e3e9;
+  --line: #d9d9e0;
+  --fg: #17171c;
+  --muted: #565661;
+  --accent: #d4194f;
+  --cyan: #007a8c;
+  --on-accent: #ffffff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-raised-hover: var(--raised-hover);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-cyan: var(--cyan);
+  --color-on-accent: var(--on-accent);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-space), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--canvas);
+    color: var(--fg);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* The toggle shows a sun in dark mode (click for light) and a moon in light mode. */
+[data-theme="dark"] .theme-moon,
+[data-theme="light"] .theme-sun {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

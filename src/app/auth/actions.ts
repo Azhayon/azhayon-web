@@ -8,7 +8,7 @@ export async function logout() {
 
   if (token) {
     try {
-      await apiPost("/auth/logout", {}, { headers: { Authorization: `Bearer ${token}` } });
+      await apiPost("/auth/logout", {}, { token });
     } catch {
       // Even if Laravel can't be reached, still clear the cookie locally.
     }
