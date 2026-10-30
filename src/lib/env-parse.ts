@@ -119,7 +119,7 @@ export function parseServerEnv(raw: Raw): ServerEnv {
   };
 
   const frontendApiKey = secret("FRONTEND_API_KEY", true);
-  const revalidateSecret = secret("REVALIDATE_SECRET", false);
+  const revalidateSecret = secret("REVALIDATE_SECRET", true);
 
   if (problems.length > 0) {
     throw new EnvError(problems);

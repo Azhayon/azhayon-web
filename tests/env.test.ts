@@ -8,6 +8,7 @@ const production = {
   API_URL: "https://api.example.com/api/v1",
   SITE_URL: "https://example.com",
   FRONTEND_API_KEY: key,
+  REVALIDATE_SECRET: key,
 };
 
 function problemsOf(raw: Record<string, string | undefined>): string[] {
@@ -78,4 +79,12 @@ describe("parseServerEnv", () => {
     expect(mentions(problemsOf({ ...local, ALLOW_INDEXING: "yes" }), "ALLOW_INDEXING")).toBe(true);
     expect(mentions(problemsOf({ ...local, APP_ENV: "staging" }), "APP_ENV")).toBe(true);
   });
+
+  it("requires the revalidation secret in production only", () => {
+    const withoutSecret = { ...production, REVALIDATE_SECRET: undefined };
+
+    expect(mentions(problemsOf(withoutSecret), "REVALIDATE_SECRET is required in production")).toBe(true);
+    expect(parseServerEnv(local).revalidateSecret).toBeNull();
+  });
+  
 });
