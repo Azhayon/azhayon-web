@@ -4,7 +4,15 @@ import { notFound } from "next/navigation";
 import { ApiImage } from "@/components/ApiImage";
 import { PostContent } from "@/components/content/PostContent";
 import { TableOfContents } from "@/components/posts/TableOfContents";
-import { getPost } from "@/lib/api/endpoints";
+import { AdSlot } from "@/components/ads/AdSlot";
+import { JsonLd } from "@/components/JsonLd";
+import { RelatedPosts } from "@/components/posts/RelatedPosts";
+import { SeriesNav } from "@/components/posts/SeriesNav";
+import { getPost, getSite } from "@/lib/api/endpoints";
+import { inArticleAds } from "@/lib/ads";
+import { serverEnv } from "@/lib/env";
+import { articleJsonLd, breadcrumbJsonLd } from "@/lib/jsonld";
+import { SITE_NAME } from "@/lib/site";
 import { ApiError } from "@/lib/api/http";
 import { buildToc } from "@/lib/content/toc";
 import { formatDate, POST_TYPE_LABEL } from "@/lib/format";
@@ -27,6 +35,14 @@ async function loadPost(slug: string) {
   }
 }
 
+async function loadAds() {
+  try {
+    return inArticleAds((await getSite()).data.ads);
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
@@ -35,7 +51,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await loadPost(slug);
+  const [post, ads] = await Promise.all([loadPost(slug), loadAds()]);
+  const site = { url: serverEnv().siteUrl, name: SITE_NAME };
 
   const toc = buildToc(post.content.content);
   const published = formatDate(post.published_at);
@@ -45,6 +62,8 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+      <JsonLd data={articleJsonLd(post, site)} />
+      <JsonLd data={breadcrumbJsonLd(post, site)} />
       <article>
         <header className="mx-auto max-w-3xl space-y-4">
           <p className="flex flex-wrap items-center gap-2 text-sm text-muted">
@@ -101,7 +120,12 @@ export default async function PostPage({ params }: Props) {
           )}
 
           <div className="min-w-0 lg:order-1">
-            <PostContent content={post.content} />
+            <PostContent
+              content={post.content}
+              ads={ads ? { rules: ads.rules, render: (position) => <AdSlot slot={ads.slot} position={position} /> } : undefined}
+            />
+
+            {post.series && <SeriesNav series={post.series} />}
 
             {post.tags.length > 0 && (
               <ul className="mt-10 flex flex-wrap gap-2" aria-label="Tags">
@@ -125,6 +149,7 @@ export default async function PostPage({ params }: Props) {
           </div>
         </div>
       </article>
+      <RelatedPosts posts={post.related} />
     </main>
   );
 }
