@@ -50,3 +50,45 @@ export function breadcrumbJsonLd(post: Source, site: Site) {
 export function serializeJsonLd(value: unknown): string {
   return JSON.stringify(value).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
 }
+
+type ReviewSource = Pick<PostDetail, "type" | "subject" | "review_score" | "author" | "published_at" | "category">;
+
+/** What each category's reviews are about, in schema.org terms. Edit this to match your category slugs. */
+export const REVIEW_ITEM_TYPE: Readonly<Record<string, string>> = {
+  movies: "Movie",
+  anime: "CreativeWorkSeries",
+  manga: "CreativeWorkSeries",
+  manhwa: "CreativeWorkSeries",
+};
+
+export const REVIEW_SCALE = { worst: 0, best: 10 } as const;
+
+/** Review markup, or null when the post is not a scored review of a known kind of thing. */
+export function reviewJsonLd(post: ReviewSource, site: Site) {
+  const itemType = REVIEW_ITEM_TYPE[post.category.slug];
+  const name = post.subject?.trim();
+  const score = post.review_score;
+
+  if (post.type !== "review" || !itemType || !name || score === null || !Number.isFinite(score)) {
+    return null;
+  }
+
+  if (score < REVIEW_SCALE.worst || score > REVIEW_SCALE.best) {
+    return null;
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    itemReviewed: { "@type": itemType, name },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: Math.round(score * 10) / 10,
+      bestRating: REVIEW_SCALE.best,
+      worstRating: REVIEW_SCALE.worst,
+    },
+    author: { "@type": "Person", name: post.author.name },
+    datePublished: post.published_at,
+    publisher: { "@type": "Organization", name: site.name, url: site.url },
+  };
+}

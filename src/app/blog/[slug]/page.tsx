@@ -11,7 +11,7 @@ import { SeriesNav } from "@/components/posts/SeriesNav";
 import { getPost, getSite } from "@/lib/api/endpoints";
 import { inArticleAds } from "@/lib/ads";
 import { serverEnv } from "@/lib/env";
-import { articleJsonLd, breadcrumbJsonLd } from "@/lib/jsonld";
+import { articleJsonLd, breadcrumbJsonLd, reviewJsonLd } from "@/lib/jsonld";
 import { SITE_NAME } from "@/lib/site";
 import { ApiError } from "@/lib/api/http";
 import { buildToc } from "@/lib/content/toc";
@@ -64,6 +64,13 @@ export default async function PostPage({ params }: Props) {
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
       <JsonLd data={articleJsonLd(post, site)} />
       <JsonLd data={breadcrumbJsonLd(post, site)} />
+
+      {(() => {
+        const review = reviewJsonLd(post, site);
+
+        return review ? <JsonLd data={review} /> : null;
+      })()}
+
       <article>
         <header className="mx-auto max-w-3xl space-y-4">
           <p className="flex flex-wrap items-center gap-2 text-sm text-muted">
