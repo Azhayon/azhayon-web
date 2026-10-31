@@ -7,16 +7,18 @@ type Props = {
   post: PostCardData;
   /** The one card whose image is the biggest thing on screen at load. */
   featured?: boolean;
+  /** Preload this card's image without the featured layout (first card of a list). */
+  preload?: boolean;
 };
 
-export function PostCard({ post, featured = false }: Props) {
+export function PostCard({ post, featured = false, preload = false }: Props) {
   const href = postHref(post.path);
   const date = formatDate(post.published_at);
 
   const image = post.image ? (
     <ApiImage
       image={post.image}
-      preload={featured}
+      preload={featured || preload}
       sizes={featured ? "(min-width: 1024px) 576px, 100vw" : "(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw"}
       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
     />
