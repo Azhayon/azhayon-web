@@ -5,8 +5,19 @@ import { staticPageMetadata } from "@/lib/static-meta";
 export const metadata = staticPageMetadata("Cookies", "Which cookies Azhayon Media uses and why.", "/cookies");
 
 const COOKIES = [
-  { name: "azm_theme", purpose: "Remembers whether you chose the light or dark theme.", kind: "Preference" },
-  { name: "azm_session", purpose: "Keeps you signed in. Scripts on the page cannot read it.", kind: "Essential" },
+  { name: "azm_theme", purpose: "Remembers your light or dark theme choice.", kind: "Preference", lasts: "1 year" },
+  {
+    name: "azm_session",
+    purpose: "Keeps you signed in. Scripts on the page cannot read it.",
+    kind: "Essential",
+    lasts: "Until you sign out or your sign-in expires",
+  },
+  {
+    name: "azm_oauth",
+    purpose: "Protects the Google or Discord sign-in while you are sent there and back. Deleted when sign-in finishes.",
+    kind: "Essential",
+    lasts: "10 minutes at most",
+  },
 ] as const;
 
 export default function CookiesPage() {
@@ -18,12 +29,13 @@ export default function CookiesPage() {
 
       <h2>Cookies we set</h2>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[32rem] border-collapse text-left text-sm">
+        <table className="w-full min-w-[40rem] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-line text-muted">
               <th className="py-2 pr-4 font-medium">Name</th>
               <th className="py-2 pr-4 font-medium">What it does</th>
-              <th className="py-2 font-medium">Type</th>
+              <th className="py-2 pr-4 font-medium">Type</th>
+              <th className="py-2 font-medium">Lasts</th>
             </tr>
           </thead>
           <tbody>
@@ -31,13 +43,13 @@ export default function CookiesPage() {
               <tr key={cookie.name} className="border-b border-line align-top">
                 <td className="py-2 pr-4 font-mono">{cookie.name}</td>
                 <td className="py-2 pr-4">{cookie.purpose}</td>
-                <td className="py-2">{cookie.kind}</td>
+                <td className="py-2 pr-4">{cookie.kind}</td>
+                <td className="py-2">{cookie.lasts}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p>The sign-in cookie lasts until you sign out or your sign-in expires.</p>
 
       <h2>Advertising cookies</h2>
       <p>
