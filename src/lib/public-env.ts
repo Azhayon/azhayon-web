@@ -1,0 +1,2 @@
+/** The API address the browser may call directly (suggestions only). Not a secret; never put a key here. */
+export const PUBLIC_API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").trim().replace(/\/+$/, "");

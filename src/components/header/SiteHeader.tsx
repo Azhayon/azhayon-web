@@ -3,6 +3,7 @@ import { AuthMenu } from "./AuthMenu";
 import { ThemeToggle } from "./ThemeToggle";
 import { getSite } from "@/lib/api/endpoints";
 import { categoryLinks } from "@/lib/nav";
+import { SearchBox } from "@/components/search/SearchBox";
 
 async function loadNavLinks() {
   try {
@@ -36,6 +37,7 @@ export async function SiteHeader() {
           )}
         </Link>
         <div className="flex items-center gap-2">
+          <SearchBox />
           <ThemeToggle />
           <AuthMenu />
         </div>
