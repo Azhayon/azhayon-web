@@ -10,7 +10,13 @@ import { buildSuggestUrl, cleanQuery, isSearchable, safeSuggestions } from "@/li
 const DEBOUNCE_MS = 250;
 const TYPE_LABEL = { series: "Series", tag: "Tag", subject: "Topic", post: "Post" } as const;
 
-export function SearchBox() {
+export function SearchBox({
+  className = "relative hidden sm:block",
+  inputClassName = "w-40 lg:w-56",
+}: {
+  className?: string;
+  inputClassName?: string;
+}) {
   const router = useRouter();
   const listId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -98,7 +104,7 @@ export function SearchBox() {
   }
 
   return (
-    <div ref={rootRef} className="relative hidden sm:block">
+    <div ref={rootRef} className={className}>
       <form
         role="search"
         action="/search"
@@ -125,7 +131,7 @@ export function SearchBox() {
           aria-controls={listId}
           aria-autocomplete="list"
           aria-activedescendant={showList && active >= 0 ? `${listId}-${active}` : undefined}
-          className="h-9 w-40 rounded-md border border-line bg-surface px-3 text-sm text-fg placeholder:text-muted lg:w-56"
+          className={`h-9 rounded-md border border-line bg-surface px-3 text-sm text-fg placeholder:text-muted ${inputClassName}`}
         />
       </form>
 

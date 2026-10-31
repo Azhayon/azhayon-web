@@ -4,6 +4,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { getSite } from "@/lib/api/endpoints";
 import { categoryLinks } from "@/lib/nav";
 import { SearchBox } from "@/components/search/SearchBox";
+import { MobileMenu } from "./MobileMenu";
 
 async function loadNavLinks() {
   try {
@@ -40,6 +41,7 @@ export async function SiteHeader() {
           <SearchBox />
           <ThemeToggle />
           <AuthMenu />
+          <MobileMenu links={links} />
         </div>
       </div>
     </header>
