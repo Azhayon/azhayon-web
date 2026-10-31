@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { AuthNotice } from "@/components/header/AuthNotice";
 import { SiteHeader } from "@/components/header/SiteHeader";
+import { SiteFooter } from "@/components/footer/SiteFooter";
 import { serverEnv } from "@/lib/env";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
@@ -39,10 +40,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="min-h-dvh bg-canvas text-fg antialiased">
+      <body className="flex min-h-dvh flex-col bg-canvas text-fg antialiased">
         <SiteHeader />
         <AuthNotice />
         {children}
+        <SiteFooter />
       </body>
     </html>
   );
