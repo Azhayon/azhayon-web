@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { PostDetail } from "@/lib/api-types";
 import { SITE_NAME } from "@/lib/site";
+import { ogImages, twitterImages } from "@/lib/social";
 
 type MetaSource = Pick<PostDetail, "path" | "title" | "excerpt" | "published_at" | "updated_at" | "author" | "seo">;
 
@@ -32,8 +33,8 @@ export function buildPostMetadata(post: MetaSource): Metadata {
       publishedTime: post.published_at,
       modifiedTime: post.updated_at,
       authors: [post.author.name],
-      ...(image ? { images: [{ url: image }] } : {}),
+      images: ogImages(image),
     },
-    twitter: { card: "summary_large_image", title: post.seo.title, description, ...(image ? { images: [image] } : {}) },
+    twitter: { card: "summary_large_image", title: post.seo.title, description, images: twitterImages(image) },
   };
 }

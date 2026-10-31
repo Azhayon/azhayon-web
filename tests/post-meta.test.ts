@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildPostMetadata, categoryHref, tagHref } from "../src/lib/post-meta";
+import { DEFAULT_SOCIAL_IMAGE } from "../src/lib/social";
 
 const post = (seo: Partial<Parameters<typeof buildPostMetadata>[0]["seo"]> = {}, excerpt: string | null = "An excerpt.") => ({
   path: "/blog/solo-leveling",
@@ -40,12 +41,14 @@ describe("buildPostMetadata", () => {
     expect(buildPostMetadata(post({ description: null }, null)).description).toBeUndefined();
   });
 
-  it("adds a social image only for http or https addresses", () => {
+  it("uses the post image for web addresses, and the default social image otherwise", () => {
     const withImage = buildPostMetadata(post({ image: "https://example.com/a.webp" }));
     const withBad = buildPostMetadata(post({ image: "javascript:alert(1)" }));
+    const without = buildPostMetadata(post({ image: null }));
 
-    expect(withImage.openGraph && "images" in withImage.openGraph).toBe(true);
-    expect(withBad.openGraph && "images" in withBad.openGraph).toBe(false);
+    expect(withImage.openGraph?.images).toEqual([{ url: "https://example.com/a.webp" }]);
+    expect(withBad.openGraph?.images).toEqual([DEFAULT_SOCIAL_IMAGE]);
+    expect(without.twitter?.images).toEqual([DEFAULT_SOCIAL_IMAGE.url]);
   });
 });
 

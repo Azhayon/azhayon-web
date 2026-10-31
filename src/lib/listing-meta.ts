@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { pagePath } from "./paging";
+import { ogImages, twitterImages } from "./social";
 
 type Options = { title: string; description: string; basePath: string; page: number; noindex?: boolean };
 
@@ -16,6 +17,7 @@ export function listingMetadata({ title, description, basePath, page, noindex = 
     description,
     alternates: { canonical },
     ...(noindex ? { robots: { index: false, follow: true } } : {}),
-    openGraph: { type: "website", title: pageTitle, description, url: canonical },
+    openGraph: { type: "website", title: pageTitle, description, url: canonical, images: ogImages() },
+    twitter: { card: "summary_large_image", title: pageTitle, description, images: twitterImages() },
   };
 }

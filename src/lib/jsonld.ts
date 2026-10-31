@@ -92,3 +92,22 @@ export function reviewJsonLd(post: ReviewSource, site: Site) {
     publisher: { "@type": "Organization", name: site.name, url: site.url },
   };
 }
+
+export function websiteJsonLd(site: Site) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: absolute(site.url, "/"),
+    inLanguage: "en",
+  };
+}
+
+export function organizationJsonLd(site: Site) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    url: absolute(site.url, "/"),
+  };
+}

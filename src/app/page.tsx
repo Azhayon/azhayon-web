@@ -5,6 +5,10 @@ import { getHome } from "@/lib/api/endpoints";
 import type { PostCard as PostCardData } from "@/lib/api-types";
 import { formatDate, postHref } from "@/lib/format";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { JsonLd } from "@/components/JsonLd";
+import { serverEnv } from "@/lib/env";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/jsonld";
+import { ogImages, twitterImages } from "@/lib/social";
 
 const TITLE = `${SITE_NAME}: movies, anime, manhwa and manga`;
 
@@ -12,7 +16,8 @@ export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
-  openGraph: { type: "website", siteName: SITE_NAME, title: TITLE, description: SITE_DESCRIPTION, url: "/" },
+  openGraph: { type: "website", siteName: SITE_NAME, title: TITLE, description: SITE_DESCRIPTION, url: "/", images: ogImages() },
+  twitter: { card: "summary_large_image", title: TITLE, description: SITE_DESCRIPTION, images: twitterImages() },
 };
 
 function PopularList({ posts }: { posts: PostCardData[] }) {
@@ -54,9 +59,14 @@ export default async function Home() {
   const featured = data.trending[0] ?? data.latest[0];
   const trendingMore = data.trending.slice(1, 4);
   const isEmpty = !featured && data.popular.length === 0;
+  const site = { url: serverEnv().siteUrl, name: SITE_NAME };
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 space-y-12 px-4 py-8">
+      
+      <JsonLd data={websiteJsonLd(site)} />
+      <JsonLd data={organizationJsonLd(site)} />
+      
       <h1 className="sr-only">{TITLE}</h1>
 
       {isEmpty && <p className="py-20 text-center text-muted">No posts yet. Check back soon.</p>}

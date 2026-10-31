@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/footer/SiteFooter";
 import { serverEnv } from "@/lib/env";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
+import { ogImages, twitterImages } from "@/lib/social";
 
 const heading = Space_Grotesk({ subsets: ["latin"], variable: "--font-space", display: "swap" });
 const body = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -22,8 +23,8 @@ export function generateMetadata(): Metadata {
     description: SITE_DESCRIPTION,
     applicationName: SITE_NAME,
     robots: env.allowIndexing ? { index: true, follow: true } : { index: false, follow: false },
-    openGraph: { type: "website", siteName: SITE_NAME, locale: "en_US" },
-    twitter: { card: "summary_large_image" },
+    openGraph: { type: "website", siteName: SITE_NAME, locale: "en_US", images: ogImages() },
+    twitter: { card: "summary_large_image", images: twitterImages() },
   };
 }
 
