@@ -9,6 +9,11 @@ export function SiteFooter() {
         <p className="text-sm text-muted">© {SITE_NAME}. Movies, anime, manhwa and manga.</p>
         <nav aria-label="Footer">
           <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+            <li>
+              <Link href="/" className="inline-block py-1 text-muted hover:text-fg">
+                Home
+              </Link>
+            </li>
             {FOOTER_LINKS.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="inline-block py-1 text-muted hover:text-fg">

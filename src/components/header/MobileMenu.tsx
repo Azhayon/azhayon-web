@@ -67,23 +67,30 @@ export function MobileMenu({ links }: { links: NavLink[] }) {
         <div className="mx-auto max-w-6xl space-y-3 px-4 py-4">
           <SearchBox className="relative sm:hidden" inputClassName="w-full" />
 
-          {links.length > 0 && (
-            <nav aria-label="Categories">
-              <ul className="flex flex-col">
-                {links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      onClick={() => setOpen(false)}
-                      className="block rounded px-2 py-3 text-fg hover:bg-raised"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
+          <nav aria-label="Main">
+            <ul className="flex flex-col">
+              <li>
+                <Link
+                  href="/"
+                  onClick={() => setOpen(false)}
+                  className="block rounded px-2 py-3 text-fg hover:bg-raised"
+                >
+                  Home
+                </Link>
+              </li>
+              {links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="block rounded px-2 py-3 text-fg hover:bg-raised"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </div>
     </div>

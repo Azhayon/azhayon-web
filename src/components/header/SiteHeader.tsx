@@ -5,6 +5,7 @@ import { getSite } from "@/lib/api/endpoints";
 import { categoryLinks } from "@/lib/nav";
 import { SearchBox } from "@/components/search/SearchBox";
 import { MobileMenu } from "./MobileMenu";
+import { SiteLogo } from "./SiteLogo";
 
 async function loadNavLinks() {
   try {
@@ -22,7 +23,8 @@ export async function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-canvas text-fg">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="font-heading text-lg font-extrabold tracking-tight">
+        <div className="flex items-center gap-6">
+          <SiteLogo />
           {links.length > 0 && (
             <nav aria-label="Categories" className="hidden md:block">
               <ul className="flex items-center gap-1 text-sm">
@@ -36,7 +38,7 @@ export async function SiteHeader() {
               </ul>
             </nav>
           )}
-        </Link>
+        </div>
         <div className="flex items-center gap-2">
           <SearchBox />
           <ThemeToggle />
