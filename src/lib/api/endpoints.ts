@@ -95,3 +95,10 @@ export function getPreview(id: string, expires: string, signature: string) {
     forwardVisitor: true,
   });
 }
+
+export const getPostPreview = (link: { id: string; expires: string; signature: string }) =>
+  request<PreviewResponse>(`/preview/posts/${link.id}`, {
+    params: { expires: link.expires, signature: link.signature },
+    noStore: true,
+    forwardVisitor: true,
+  });
