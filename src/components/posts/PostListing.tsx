@@ -23,11 +23,14 @@ export function PostListing({ heading, intro, posts, page, lastPage, basePath, e
       {posts.length === 0 ? (
         <p className="py-16 text-center text-muted">{emptyText}</p>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post, index) => (
-            <PostCard key={post.slug} post={post} preload={page === 1 && index === 0} />
-          ))}
-        </div>
+        <>
+          <h2 className="sr-only">Posts</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post, index) => (
+              <PostCard key={post.slug} post={post} preload={page === 1 && index === 0} />
+            ))}
+          </div>
+        </>
       )}
 
       <Pagination basePath={basePath} page={page} lastPage={lastPage} />

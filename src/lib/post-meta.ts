@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { PostDetail } from "@/lib/api-types";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 import { ogImages, twitterImages } from "@/lib/social";
 
 type MetaSource = Pick<PostDetail, "path" | "title" | "excerpt" | "published_at" | "updated_at" | "author" | "seo">;
@@ -16,7 +16,7 @@ function webImage(value: string | null): string | null {
 
 /** Page metadata for a post. `robots` is set only for noindex, so the site-wide setting is never overridden. */
 export function buildPostMetadata(post: MetaSource): Metadata {
-  const description = post.seo.description?.trim() || post.excerpt?.trim() || undefined;
+  const description = post.seo.description?.trim() || post.excerpt?.trim() || SITE_DESCRIPTION;
   const image = webImage(post.seo.image);
 
   return {

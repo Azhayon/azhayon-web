@@ -10,9 +10,9 @@ describe("SiteLogo", () => {
     expect(html).toContain('href="/"');
   });
 
-  it("has an accessible name and shows the brand", () => {
-    expect(html).toContain('aria-label="Azhayon Media, home"');
+  it("shows the brand as its visible link text", () => {
     expect(html).toContain("Azhayon");
     expect(html).toContain("Media");
+    expect(html).not.toContain("aria-label");
   });
 });

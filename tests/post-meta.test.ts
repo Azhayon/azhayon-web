@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildPostMetadata, categoryHref, tagHref } from "../src/lib/post-meta";
 import { DEFAULT_SOCIAL_IMAGE } from "../src/lib/social";
+import { SITE_DESCRIPTION } from "@/lib/site";
 
 const post = (seo: Partial<Parameters<typeof buildPostMetadata>[0]["seo"]> = {}, excerpt: string | null = "An excerpt.") => ({
   path: "/blog/solo-leveling",
@@ -38,7 +39,7 @@ describe("buildPostMetadata", () => {
 
   it("falls back to the excerpt, then to nothing", () => {
     expect(buildPostMetadata(post({ description: null })).description).toBe("An excerpt.");
-    expect(buildPostMetadata(post({ description: null }, null)).description).toBeUndefined();
+    expect(buildPostMetadata(post({ description: null }, null)).description).toBe(SITE_DESCRIPTION);
   });
 
   it("uses the post image for web addresses, and the default social image otherwise", () => {

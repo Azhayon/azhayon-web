@@ -21,6 +21,7 @@ export function ApiImage({ image, sizes, preload = false, className, alt }: Prop
       alt={alt ?? image.alt ?? ""}
       sizes={sizes}
       preload={preload}
+      fetchPriority={preload ? "high" : undefined}
       className={className}
     />
   );
