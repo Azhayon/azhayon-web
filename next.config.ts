@@ -26,6 +26,17 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "private, no-store" },
         ],
       },
+
+      {
+        // After the global rule, so these win. The link carries a signature, so it must never leak or be cached.
+        source: "/preview/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+
     ];
   },
 };
