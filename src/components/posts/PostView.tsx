@@ -31,8 +31,6 @@ export function PostView({ post, ads }: Props): ReactNode {
   return (
     <>
       <article>
-        {/* paste the <header>, <figure> and the two-column <div> from page.tsx here, unchanged,
-            except: replace every {" Â· "} with {DOT} and {" Â· Updated "} with {DOT}{"Updated "} */}
       
         <header className="mx-auto max-w-3xl space-y-4">
           <p className="flex flex-wrap items-center gap-2 text-sm text-muted">
