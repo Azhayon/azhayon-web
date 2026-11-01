@@ -95,3 +95,8 @@ export function resolveRedirect(map: RedirectMap, pathname: string): Target | nu
 export function shouldSkipPath(pathname: string): boolean {
   return /^\/(_next|api|auth)(\/|$)/.test(pathname) || /\.[A-Za-z0-9]+$/.test(pathname);
 }
+
+/** The lowercase form of a path that contains capital letters, or null when it is already lowercase. All our addresses are lowercase. */
+export function lowercasePath(pathname: string): string | null {
+  return /[A-Z]/.test(pathname) ? pathname.toLowerCase() : null;
+}

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getRedirectMap } from "@/lib/redirect-store";
-import { resolveRedirect, shouldSkipPath } from "@/lib/redirects";
+import { lowercasePath, resolveRedirect, shouldSkipPath } from "@/lib/redirects";
+
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -12,7 +13,17 @@ export async function proxy(request: NextRequest) {
   const target = resolveRedirect(await getRedirectMap(), pathname);
 
   if (!target) {
-    return NextResponse.next();
+    const lower = lowercasePath(pathname);
+
+    if (!lower) {
+      return NextResponse.next();
+    }
+
+    const url = request.nextUrl.clone();
+
+    url.pathname = lower;
+
+    return NextResponse.redirect(url, 301);
   }
 
   const [path, query] = target.to.split("?");
