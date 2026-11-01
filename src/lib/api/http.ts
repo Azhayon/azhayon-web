@@ -16,7 +16,7 @@ export class ApiError extends Error {
 }
 
 type Options = {
-  method?: "GET" | "POST";
+  method?: "GET" | "POST" | "PUT" | "DELETE";
   params?: Record<string, QueryValue>;
   body?: unknown;
   /** A signed-in user's API token. */
