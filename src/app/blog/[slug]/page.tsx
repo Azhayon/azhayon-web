@@ -9,6 +9,7 @@ import { SITE_NAME } from "@/lib/site";
 import { ApiError } from "@/lib/api/http";
 import { buildPostMetadata } from "@/lib/post-meta";
 import { PostView } from "@/components/posts/PostView";
+import { ViewBeacon } from "@/components/posts/ViewBeacon";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -51,6 +52,8 @@ export default async function PostPage({ params }: Props) {
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
       <JsonLd data={articleJsonLd(post, site)} />
       <JsonLd data={breadcrumbJsonLd(post, site)} />
+
+      <ViewBeacon slug={slug} />
 
       {review ? <JsonLd data={review} /> : null}
       <PostView post={post} ads={ads} />
