@@ -35,8 +35,10 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong>Technical data.</strong> Your IP address, browser type and the pages you request. We use this to run
-          the site, protect it from abuse (for example by limiting how many requests one visitor can make) and keep
-          simple counts of how often posts are read.
+          the site, protect it from abuse (for example by limiting how many requests one visitor can make) and count how
+          often posts are read. To avoid counting the same visit twice, we keep a one-way scrambled code made from your IP
+          address and browser details for about a day. It cannot be turned back into your address and is not linked to
+          your account.
         </li>
       </ul>
 
