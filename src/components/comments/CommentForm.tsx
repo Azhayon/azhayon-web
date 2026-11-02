@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { postComment } from "@/app/engagement/actions";
 import { failureFromError, type Failure } from "@/lib/action-result";
@@ -15,12 +15,24 @@ type Props = {
   onPosted: (comment: CommentCreated) => void;
   /** Called when the server says the session is gone, so the page can show the sign-in prompt again. */
   onSignedOut: () => void;
+  /** Put the cursor in the text box when the form appears (used for replies). */
+  autoFocus?: boolean;
+  /** When given, a Cancel button is shown. */
+  onCancel?: () => void;
 };
 
 const MAX = 2000;
 
-export function CommentForm({ slug, parentId = null, label = "Add a comment", onPosted, onSignedOut }: Props) {
+export function CommentForm({ slug, parentId = null, label = "Add a comment", autoFocus = false, onCancel, onPosted, onSignedOut }: Props) {
   const fieldId = useId();
+  const fieldRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (autoFocus) {
+      fieldRef.current?.focus();
+    }
+  }, [autoFocus]);
+
   const [body, setBody] = useState("");
   const [spoiler, setSpoiler] = useState(false);
   const [pending, setPending] = useState(false);
@@ -74,6 +86,7 @@ export function CommentForm({ slug, parentId = null, label = "Add a comment", on
       <textarea
         id={fieldId}
         value={body}
+        ref={fieldRef}
         onChange={(event) => {
           setBody(event.target.value);
           setNotice("");
@@ -112,13 +125,21 @@ export function CommentForm({ slug, parentId = null, label = "Add a comment", on
           This comment contains spoilers
         </label>
 
-        <button
-          type="submit"
-          disabled={pending || !checked.ok}
-          className="h-10 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent hover:bg-cyan disabled:opacity-50"
-        >
-          {pending ? "Posting\u2026" : "Post comment"}
-        </button>
+        <div className="flex items-center gap-3">
+          {onCancel && (
+            <button type="button" onClick={onCancel} className="h-10 rounded-full px-4 text-sm text-muted hover:text-fg">
+              Cancel
+            </button>
+          )}
+
+          <button
+            type="submit"
+            disabled={pending || !checked.ok}
+            className="h-10 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent hover:bg-cyan disabled:opacity-50"
+          >
+            {pending ? "Posting\u2026" : "Post comment"}
+          </button>
+        </div>
       </div>
     </form>
   );

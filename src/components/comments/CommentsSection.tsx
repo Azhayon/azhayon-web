@@ -99,7 +99,15 @@ export function CommentsSection({ slug }: { slug: string }) {
   const [state, setState] = useState<State>({ status: "loading" });
   const { user, refresh } = useSession(started);
   const [mine, setMine] = useState<CommentCreated[]>([]);
+  const [replyingTo, setReplyingTo] = useState<number | null>(null);
+  const [announcement, setAnnouncement] = useState("");
 
+  function closeReply(id: number) {
+    setReplyingTo(null);
+
+    // Put the keyboard back on the button that opened the form.
+    window.setTimeout(() => document.getElementById(`${headingId}-reply-${id}`)?.focus(), 0);
+  }
   // Wait until the reader is close, so the page itself stays fast.
   useEffect(() => {
     const node = rootRef.current;
@@ -177,6 +185,8 @@ export function CommentsSection({ slug }: { slug: string }) {
     return null;
   }
 
+  const pendingTop = mine.filter((created) => created.parent_id === null);
+
   return (
     <section
       ref={rootRef}
@@ -200,18 +210,29 @@ export function CommentsSection({ slug }: { slug: string }) {
         )}
 
         {user && (
-          <CommentForm slug={slug} onPosted={(created) => setMine((list) => [created, ...list])} onSignedOut={refresh} />
+          <CommentForm
+            slug={slug}
+            onPosted={(created) => {
+              setMine((list) => [created, ...list]);
+              setAnnouncement("");
+            }}
+            onSignedOut={refresh}
+          />
         )}
       </div>
 
-      {mine.length > 0 && (
+      {pendingTop.length > 0 && (
         <ul className="mt-6 space-y-4" aria-label="Your comments waiting for approval">
-          {mine.map((created) => (
+          {pendingTop.map((created) => (
             <PendingComment key={created.id} comment={created} author={user?.name ?? "You"} />
           ))}
         </ul>
       )}
-      
+
+      <p role="status" className="sr-only">
+        {announcement}
+      </p>
+
       <div className="mt-6">
         {state.status === "loading" && <Skeleton />}
 
@@ -229,23 +250,62 @@ export function CommentsSection({ slug }: { slug: string }) {
         {state.status === "ready" && state.items.length > 0 && (
           <>
             <ul className="space-y-8">
-              {state.items.map((comment) => (
-                <li key={comment.id} className="space-y-2">
-                  <Meta comment={comment} />
-                  <Body comment={comment} />
+              {state.items.map((comment) => {
+                const replying = replyingTo === comment.id;
+                const pendingReplies = mine.filter((created) => created.parent_id === comment.id);
 
-                  {comment.replies.length > 0 && (
-                    <ul className="mt-4 space-y-5 border-l border-line pl-4">
-                      {comment.replies.map((reply) => (
-                        <li key={reply.id} className="space-y-1">
-                          <Meta comment={reply} />
-                          <Body comment={reply} />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
+                return (
+                  <li key={comment.id} className="space-y-2">
+                    <Meta comment={comment} />
+                    <Body comment={comment} />
+
+                    {user && (
+                      <button
+                        type="button"
+                        id={`${headingId}-reply-${comment.id}`}
+                        onClick={() => setReplyingTo(replying ? null : comment.id)}
+                        aria-expanded={replying}
+                        className="text-sm text-muted underline-offset-4 hover:text-fg hover:underline"
+                      >
+                        Reply
+                      </button>
+                    )}
+
+                    {replying && user && (
+                      <div className="mt-2 border-l border-line pl-4">
+                        <CommentForm
+                          slug={slug}
+                          parentId={comment.id}
+                          label={`Reply to ${comment.author}`}
+                          autoFocus
+                          onCancel={() => closeReply(comment.id)}
+                          onPosted={(created) => {
+                            setMine((list) => [...list, created]);
+                            setAnnouncement("Your reply was posted. It is waiting for approval.");
+                            closeReply(comment.id);
+                          }}
+                          onSignedOut={refresh}
+                        />
+                      </div>
+                    )}
+
+                    {(comment.replies.length > 0 || pendingReplies.length > 0) && (
+                      <ul className="mt-4 space-y-5 border-l border-line pl-4">
+                        {comment.replies.map((reply) => (
+                          <li key={reply.id} className="space-y-1">
+                            <Meta comment={reply} />
+                            <Body comment={reply} />
+                          </li>
+                        ))}
+
+                        {pendingReplies.map((created) => (
+                          <PendingComment key={`pending-${created.id}`} comment={created} author={user?.name ?? "You"} />
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
 
             {state.page < state.lastPage && (
