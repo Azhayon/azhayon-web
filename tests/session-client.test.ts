@@ -10,7 +10,7 @@ describe("parsePublicUser", () => {
   });
 
   it("treats a missing avatar as none", () => {
-    const { avatar_url: _gone, ...noAvatar } = user;
+    const noAvatar = { id: 7, name: "Ayon", role: "user" };
 
     expect(parsePublicUser({ user: noAvatar })?.avatar_url).toBeNull();
   });
