@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useId, useRef } from "react";
 
 const linkClass =
   "block rounded-lg bg-raised px-4 py-3 text-center text-sm font-semibold text-fg ring-1 ring-line transition hover:bg-raised-hover hover:ring-cyan";
 
 export function SignInButton() {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
 
   return (
     <>
@@ -20,7 +21,7 @@ export function SignInButton() {
 
       <dialog
         ref={dialogRef}
-        aria-labelledby="signin-title"
+        aria-labelledby="titleId"
         // A click on the backdrop targets the dialog element itself.
         onClick={(e) => {
           if (e.target === e.currentTarget) dialogRef.current?.close();
@@ -28,7 +29,7 @@ export function SignInButton() {
         className="m-auto w-[min(92vw,24rem)] rounded-2xl bg-surface p-0 text-fg ring-1 ring-line backdrop:bg-black/70"
       >
         <div className="p-6">
-          <h2 id="signin-title" className="text-xl font-extrabold">
+          <h2 id="titleId" className="text-xl font-extrabold">
             Sign in to Azhayon Media
           </h2>
           <p className="mt-2 text-sm text-muted">

@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import type { PostComment, PostCommentReply } from "@/lib/api-types";
+import type { CommentCreated, PostComment, PostCommentReply } from "@/lib/api-types";
 import { fetchCommentsPage, mergeComments, type CommentsPage } from "@/lib/comments";
 import { formatDate } from "@/lib/format";
 import { PUBLIC_API_URL } from "@/lib/public-env";
+import { CommentForm } from "@/components/comments/CommentForm";
+import { useSession } from "@/components/comments/useSession";
+import { SignInButton } from "@/components/header/SignInButton";
 
 type State =
   | { status: "loading" }
@@ -58,6 +61,23 @@ function Body({ comment }: { comment: PostCommentReply }) {
   );
 }
 
+/** A comment the reader just posted. The public list will not show it until a moderator approves it. */
+function PendingComment({ comment, author }: { comment: CommentCreated; author: string }) {
+  return (
+    <li className="space-y-2 rounded-lg border border-dashed border-line p-4">
+      <p className="text-sm text-muted">
+        <span className="font-semibold text-fg">{author}</span>
+        {DOT}
+        <span className="rounded bg-raised px-2 py-0.5 text-fg">
+          {comment.status === "pending" ? "Waiting for approval" : "Posted"}
+        </span>
+        {comment.is_spoiler && `${DOT}marked as a spoiler`}
+      </p>
+      <p className="whitespace-pre-line break-words">{comment.body}</p>
+    </li>
+  );
+}
+
 function Skeleton() {
   return (
     <div aria-hidden className="space-y-6">
@@ -77,6 +97,8 @@ export function CommentsSection({ slug }: { slug: string }) {
   const rootRef = useRef<HTMLElement>(null);
   const [started, setStarted] = useState(false);
   const [state, setState] = useState<State>({ status: "loading" });
+  const { user, refresh } = useSession(started);
+  const [mine, setMine] = useState<CommentCreated[]>([]);
 
   // Wait until the reader is close, so the page itself stays fast.
   useEffect(() => {
@@ -167,6 +189,29 @@ export function CommentsSection({ slug }: { slug: string }) {
         {state.status === "ready" && state.total > 0 && <span className="ml-2 text-lg text-muted">({state.total})</span>}
       </h2>
 
+      <div className="mt-6 min-h-28">
+        {user === undefined && <span aria-hidden className="block h-24 animate-pulse rounded-md bg-raised" />}
+
+        {user === null && (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-surface p-4 ring-1 ring-line">
+            <p className="text-muted">Sign in to join the discussion.</p>
+            <SignInButton />
+          </div>
+        )}
+
+        {user && (
+          <CommentForm slug={slug} onPosted={(created) => setMine((list) => [created, ...list])} onSignedOut={refresh} />
+        )}
+      </div>
+
+      {mine.length > 0 && (
+        <ul className="mt-6 space-y-4" aria-label="Your comments waiting for approval">
+          {mine.map((created) => (
+            <PendingComment key={created.id} comment={created} author={user?.name ?? "You"} />
+          ))}
+        </ul>
+      )}
+      
       <div className="mt-6">
         {state.status === "loading" && <Skeleton />}
 

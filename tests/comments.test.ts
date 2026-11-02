@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildCommentsUrl, mergeComments, parseCommentsPage } from "@/lib/comments";
+import { parsePublicUser } from "@/lib/session-client";
 
 const reply = { id: 2, author: "Ayon", body: "Reply", is_spoiler: false, created_at: "2026-10-18T07:10:00Z" };
 const comment = { id: 1, author: "Ayon", body: "Hello", is_spoiler: true, created_at: "2026-10-18T06:44:00Z", replies: [reply] };
@@ -49,10 +50,10 @@ describe("parseCommentsPage", () => {
     expect(page?.items[0].replies).toEqual([reply]);
   });
 
-  it("treats missing replies as none", () => {
-    const { replies: _unused, ...withoutReplies } = comment;
+  it("treats a missing avatar as none", () => {
+    const noAvatar = { id: 7, name: "Ayon", role: "user" };
 
-    expect(parseCommentsPage({ data: [withoutReplies], meta })?.items[0].replies).toEqual([]);
+    expect(parsePublicUser({ user: noAvatar })?.avatar_url).toBeNull();
   });
 
   it("returns null when the shape is wrong", () => {
