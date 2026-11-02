@@ -18,10 +18,12 @@ type Props = {
   post: PostDetail;
   /** Omit (or pass null) to render without ad slots, as the preview does. */
   ads?: InArticleAds | null;
+  /** Shown between the article and the related posts. The preview leaves it out. */
+  afterArticle?: ReactNode;
 };
 
 
-export function PostView({ post, ads }: Props): ReactNode {
+export function PostView({ post, ads, afterArticle }: Props): ReactNode {
   const toc = buildToc(post.content.content);
   const published = formatDate(post.published_at);
   const updated = formatDate(post.updated_at);
@@ -117,6 +119,7 @@ export function PostView({ post, ads }: Props): ReactNode {
         </div>
       
       </article>
+      {afterArticle}
       <RelatedPosts posts={post.related} />
     </>
   );

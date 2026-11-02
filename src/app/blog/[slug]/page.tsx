@@ -10,6 +10,7 @@ import { ApiError } from "@/lib/api/http";
 import { buildPostMetadata } from "@/lib/post-meta";
 import { PostView } from "@/components/posts/PostView";
 import { ViewBeacon } from "@/components/posts/ViewBeacon";
+import { CommentsSection } from "@/components/comments/CommentsSection";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -56,7 +57,7 @@ export default async function PostPage({ params }: Props) {
       <ViewBeacon slug={slug} />
 
       {review ? <JsonLd data={review} /> : null}
-      <PostView post={post} ads={ads} />
+      <PostView post={post} ads={ads} afterArticle={<CommentsSection slug={slug} />} />
     </main>
   );
 }
