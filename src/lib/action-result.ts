@@ -43,16 +43,7 @@ export function describeFailure(status: number, errors?: Record<string, string[]
   if (status === 429) return failure("limit");
 
   if (status === 422) {
-    const fields: Record<string, string> = {};
-
-    // Only known field names are copied, so nothing from the API's response can become a key.
-    for (const name of Object.keys(FIELD_MESSAGE)) {
-      if (errors && Object.hasOwn(errors, name)) {
-        fields[name] = FIELD_MESSAGE[name];
-      }
-    }
-
-    return failure("invalid", fields);
+    return invalidInput(errors ? Object.keys(errors) : []);
   }
 
   return failure("unavailable");
@@ -67,4 +58,17 @@ export function failureFromError(error: unknown): Failure {
   }
 
   return failure("unavailable");
+}
+
+/** A failure for input that was refused before it reached the API. Only known field names get a message. */
+export function invalidInput(names: readonly string[]): Failure {
+  const fields: Record<string, string> = {};
+
+  for (const name of names) {
+    if (Object.hasOwn(FIELD_MESSAGE, name)) {
+      fields[name] = FIELD_MESSAGE[name];
+    }
+  }
+
+  return failure("invalid", fields);
 }

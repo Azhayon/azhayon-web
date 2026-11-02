@@ -17,8 +17,11 @@ import type {
   SitemapTaxonomyResponse,
   TagResponse,
   TagsResponse,
+  CommentCreatedResponse,
+  MyRatingResponse,
 } from "@/lib/api-types";
 import { ApiError, request } from "./http";
+import type { CommentInput } from "@/lib/engagement";
 
 export type PostsParams = {
   category?: string;
@@ -102,3 +105,19 @@ export const getPostPreview = (link: { id: string; expires: string; signature: s
     noStore: true,
     forwardVisitor: true,
   });
+
+
+  /** Signed-in calls. Never cached, and the visitor's address is forwarded so the limits count them. */
+const signedIn = { noStore: true, forwardVisitor: true } as const;
+
+export const createComment = (token: string, postSlug: string, input: CommentInput) =>
+  request<CommentCreatedResponse>(`/posts/${slug(postSlug)}/comments`, { method: "POST", body: input, token, ...signedIn });
+
+export const getMyRating = (token: string, postSlug: string) =>
+  request<MyRatingResponse>(`/posts/${slug(postSlug)}/rating`, { token, ...signedIn });
+
+export const putRating = (token: string, postSlug: string, score: number) =>
+  request<MyRatingResponse>(`/posts/${slug(postSlug)}/rating`, { method: "PUT", body: { score }, token, ...signedIn });
+
+export const deleteRating = (token: string, postSlug: string) =>
+  request<MyRatingResponse>(`/posts/${slug(postSlug)}/rating`, { method: "DELETE", token, ...signedIn });

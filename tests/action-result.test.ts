@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { describeFailure, failureFromError } from "@/lib/action-result";
+import { describeFailure, failureFromError, invalidInput } from "@/lib/action-result";
 
 describe("describeFailure", () => {
   it("maps each status to a fixed code", () => {
@@ -44,5 +44,18 @@ describe("failureFromError", () => {
     expect(failureFromError(new Error("boom")).code).toBe("unavailable");
     expect(failureFromError(null).code).toBe("unavailable");
     expect(failureFromError("text").code).toBe("unavailable");
+  });
+});
+
+describe("invalidInput", () => {
+  it("gives a fixed message for each known field", () => {
+    const failure = invalidInput(["body", "parent_id"]);
+
+    expect(failure.code).toBe("invalid");
+    expect(Object.keys(failure.fields ?? {})).toEqual(["body", "parent_id"]);
+  });
+
+  it("ignores names it does not know", () => {
+    expect(invalidInput(["nope", "__proto__"]).fields).toEqual({});
   });
 });
