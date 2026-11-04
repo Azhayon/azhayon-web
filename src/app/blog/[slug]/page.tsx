@@ -11,6 +11,7 @@ import { buildPostMetadata } from "@/lib/post-meta";
 import { PostView } from "@/components/posts/PostView";
 import { ViewBeacon } from "@/components/posts/ViewBeacon";
 import { CommentsSection } from "@/components/comments/CommentsSection";
+import { RatingWidget } from "@/components/comments/RatingWidget";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -57,7 +58,16 @@ export default async function PostPage({ params }: Props) {
       <ViewBeacon slug={slug} />
 
       {review ? <JsonLd data={review} /> : null}
-      <PostView post={post} ads={ads} afterArticle={<CommentsSection slug={slug} />} />
+      <PostView
+        post={post}
+        ads={ads}
+        afterArticle={
+          <>
+            <RatingWidget slug={slug} average={post.rating.average} count={post.rating.count} />
+            <CommentsSection slug={slug} />
+          </>
+        }
+      />
     </main>
   );
 }
