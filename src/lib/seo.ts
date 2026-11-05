@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 export const SITEMAP_FIXED_PATHS = ["/", "/blog", "/about", "/contact", "/privacy", "/terms", "/cookies"] as const;
 
 /** Paths crawlers are asked to stay out of once the site is open. */
-export const ROBOTS_DISALLOW = ["/search", "/browse", "/auth/", "/api/", "/preview/"] as const;
+export const ROBOTS_DISALLOW = ["/search", "/browse", "/auth/", "/api/", "/preview/", "/newsletter/"] as const;
 
 /** One leading slash, no query string, no scheme. */
 const SITE_PATH = /^\/(?!\/)[A-Za-z0-9\-._~%/]*$/;

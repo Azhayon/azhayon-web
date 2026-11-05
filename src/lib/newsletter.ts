@@ -45,3 +45,8 @@ export const SUBSCRIBE_PENDING_MESSAGE =
 export function isHoneypotTripped(value: unknown): boolean {
   return typeof value === "string" && value.trim() !== "";
 }
+
+/** A query value is usable only when it is exactly one string. Repeated parameters (?token=a&token=b) are refused. */
+export function tokenFromQuery(value: string | string[] | undefined): string | null {
+  return typeof value === "string" ? value : null;
+}

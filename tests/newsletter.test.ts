@@ -5,6 +5,7 @@ import {
   parseConfirmToken,
   parseEmail,
   parseUnsubscribeToken,
+  tokenFromQuery,
 } from "@/lib/newsletter";
 
 describe("newsletter input", () => {
@@ -61,5 +62,14 @@ describe("honeypot", () => {
     for (const value of ["", "   ", undefined, null]) {
       expect(isHoneypotTripped(value)).toBe(false);
     }
+  });
+});
+
+
+describe("tokenFromQuery", () => {
+  it("returns a single string and refuses repeated or missing parameters", () => {
+    expect(tokenFromQuery("abc")).toBe("abc");
+    expect(tokenFromQuery(["a", "b"])).toBeNull();
+    expect(tokenFromQuery(undefined)).toBeNull();
   });
 });

@@ -37,6 +37,16 @@ const nextConfig: NextConfig = {
         ],
       },
 
+      {
+        // After the global rule, so these win. The link carries a token, so it must never leak or be cached.
+        source: "/newsletter/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+
     ];
   },
 };
