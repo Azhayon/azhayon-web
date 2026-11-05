@@ -19,6 +19,7 @@ import type {
   TagsResponse,
   CommentCreatedResponse,
   MyRatingResponse,
+  NewsletterResponse,
 } from "@/lib/api-types";
 import { ApiError, request } from "./http";
 import type { CommentInput } from "@/lib/engagement";
@@ -121,3 +122,14 @@ export const putRating = (token: string, postSlug: string, score: number) =>
 
 export const deleteRating = (token: string, postSlug: string) =>
   request<MyRatingResponse>(`/posts/${slug(postSlug)}/rating`, { method: "DELETE", token, ...signedIn });
+
+
+/** Newsletter calls are anonymous. Never cached, and the visitor's address is forwarded so the limits count them. */
+export const subscribeNewsletter = (email: string) =>
+  request<NewsletterResponse>("/newsletter/subscribe", { method: "POST", body: { email }, ...signedIn });
+
+export const confirmNewsletter = (token: string) =>
+  request<NewsletterResponse>("/newsletter/confirm", { method: "POST", body: { token }, ...signedIn });
+
+export const unsubscribeNewsletter = (token: string) =>
+  request<NewsletterResponse>("/newsletter/unsubscribe", { method: "POST", body: { token }, ...signedIn });
