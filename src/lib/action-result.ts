@@ -26,6 +26,8 @@ const FIELD_MESSAGE: Record<string, string> = {
   body: "Write 2 to 2,000 characters, with at most 2 links, and not the same comment you just posted.",
   parent_id: "That comment can no longer be replied to.",
   score: "Choose a rating from 1 to 5.",
+  email: "Enter a valid email address.",
+  token: "This link is invalid or has expired. Please sign up again.",
 };
 
 const failure = (code: FailureCode, fields?: Record<string, string>): Failure => ({
