@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { apiPost } from "@/lib/api";
 import { setSessionCookie, takeOAuthVerifier } from "@/lib/auth/cookies";
 import type { ExchangeResponse } from "@/lib/types";
+import { takeReturnPath } from "@/lib/auth/return-cookie";
+import { returnTarget } from "@/lib/return-path";
 
 // Only these values are ever echoed back; anything else becomes "unknown".
 const KNOWN_ERRORS = new Set([
@@ -21,13 +23,14 @@ export async function GET(request: Request) {
 
   // Always consume the verifier, whatever happens next.
   const verifier = await takeOAuthVerifier();
+  const returnPath = await takeReturnPath();
 
   if (error) {
-    redirect(`/?auth_error=${KNOWN_ERRORS.has(error) ? error : "unknown"}`);
+    redirect(returnTarget(returnPath, KNOWN_ERRORS.has(error) ? error : "unknown"));
   }
 
   if (!code || !verifier) {
-    redirect("/?auth_error=invalid_request");
+    redirect(returnTarget(returnPath, "invalid_request"));
   }
 
   let result: ExchangeResponse | null = null;
@@ -39,10 +42,10 @@ export async function GET(request: Request) {
   }
 
   if (!result) {
-    redirect("/?auth_error=exchange_failed");
+    redirect(returnTarget(returnPath, "exchange_failed"));
   }
 
   await setSessionCookie(result.token, new Date(result.expires_at));
 
-  redirect("/");
+  redirect(returnTarget(returnPath));
 }

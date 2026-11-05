@@ -1,13 +1,16 @@
 "use client";
 
 import { useId, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { loginHref } from "@/lib/return-path";
 
 const linkClass =
   "block rounded-lg bg-raised px-4 py-3 text-center text-sm font-semibold text-fg ring-1 ring-line transition hover:bg-raised-hover hover:ring-cyan";
 
-export function SignInButton() {
+export function SignInButton({ returnHash }: { returnHash?: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const pathname = usePathname();
 
   return (
     <>
@@ -40,11 +43,11 @@ export function SignInButton() {
               redirect off-site, so next/link must not prefetch or client-route them. */}
           <div className="mt-5 space-y-3">
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/auth/login/google" rel="nofollow" className={linkClass}>
+            <a href={loginHref("google", pathname, returnHash)} rel="nofollow" className={linkClass}>
               Continue with Google
             </a>
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/auth/login/discord" rel="nofollow" className={linkClass}>
+            <a href={loginHref("discord", pathname, returnHash)} rel="nofollow" className={linkClass}>
               Continue with Discord
             </a>
           </div>

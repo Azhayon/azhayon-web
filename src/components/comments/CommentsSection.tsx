@@ -190,9 +190,10 @@ export function CommentsSection({ slug }: { slug: string }) {
   return (
     <section
       ref={rootRef}
+      id="comments"
       aria-labelledby={headingId}
       aria-busy={state.status === "loading"}
-      className="mx-auto mt-12 min-h-64 max-w-3xl border-t border-line pt-8"
+      className="mx-auto mt-12 min-h-64 max-w-3xl scroll-mt-20 border-t border-line pt-8"
     >
       <h2 id={headingId} className="font-heading text-2xl font-extrabold">
         Comments
@@ -205,7 +206,7 @@ export function CommentsSection({ slug }: { slug: string }) {
         {user === null && (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-surface p-4 ring-1 ring-line">
             <p className="text-muted">Sign in to join the discussion.</p>
-            <SignInButton />
+            <SignInButton returnHash="comments" />
           </div>
         )}
 

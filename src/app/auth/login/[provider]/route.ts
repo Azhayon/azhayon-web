@@ -1,11 +1,12 @@
 import { createHash, randomBytes } from "node:crypto";
 import { redirect } from "next/navigation";
 import { setOAuthVerifier } from "@/lib/auth/cookies";
+import { setReturnPath } from "@/lib/auth/return-cookie";
 
 const PROVIDERS = new Set(["google", "discord"]);
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ provider: string }> }
 ) {
   const { provider } = await params;
@@ -19,6 +20,7 @@ export async function GET(
   const challenge = createHash("sha256").update(verifier).digest("hex");
 
   await setOAuthVerifier(verifier);
+  await setReturnPath(new URL(request.url).searchParams.get("next"));
 
   redirect(`${process.env.API_URL}/auth/${provider}/redirect?challenge=${challenge}`);
 }
