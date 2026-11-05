@@ -43,6 +43,6 @@ export async function setOAuthVerifier(verifier: string) {
 export async function takeOAuthVerifier(): Promise<string | null> {
   const store = await cookies();
   const value = store.get(OAUTH_COOKIE)?.value ?? null;
-  store.delete(OAUTH_COOKIE);
+  store.delete({ name: OAUTH_COOKIE, path: "/auth" });
   return value;
 }
