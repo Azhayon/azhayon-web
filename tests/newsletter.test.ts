@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   describeUnsubscribeFailure,
+  isHoneypotTripped,
   parseConfirmToken,
   parseEmail,
   parseUnsubscribeToken,
@@ -46,5 +47,19 @@ describe("unsubscribe failures", () => {
   it("falls back to the shared messages for other statuses", () => {
     expect(describeUnsubscribeFailure(429).code).toBe("limit");
     expect(describeUnsubscribeFailure(500).code).toBe("unavailable");
+  });
+});
+
+
+describe("honeypot", () => {
+  it("is tripped only when something was typed into the hidden field", () => {
+    expect(isHoneypotTripped("http://spam.example")).toBe(true);
+    expect(isHoneypotTripped("  x ")).toBe(true);
+  });
+
+  it("is quiet for an empty or missing value", () => {
+    for (const value of ["", "   ", undefined, null]) {
+      expect(isHoneypotTripped(value)).toBe(false);
+    }
   });
 });

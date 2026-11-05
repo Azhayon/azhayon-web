@@ -35,3 +35,13 @@ export function describeUnsubscribeFailure(status: number): Failure {
 
   return describeFailure(status);
 }
+
+
+/** Shown after a successful sign-up, and also to bots that tripped the honeypot, so they learn nothing. */
+export const SUBSCRIBE_PENDING_MESSAGE =
+  "If this address can receive our newsletter, a confirmation email is on its way. Please check your inbox and spam folder.";
+
+/** The hidden field is empty for people. Anything typed into it means a script filled in the form. */
+export function isHoneypotTripped(value: unknown): boolean {
+  return typeof value === "string" && value.trim() !== "";
+}
